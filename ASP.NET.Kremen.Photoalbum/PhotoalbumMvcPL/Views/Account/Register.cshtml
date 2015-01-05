@@ -1,0 +1,78 @@
+﻿@model PhotoalbumMvcPL.ViewModels.RegisterViewModel
+
+@{
+    ViewBag.Title = "Register";
+}
+
+@*---------------------------------------------------REGISTER FORM---------------------------------------------------*@
+@*browsers will download files properly only if the enctype attribute in HTML-form element contains the value of multipart / form-data. Without attribute enctype browser will transmit only the file name, not its contents*@
+@using (Html.BeginForm("Register", "Account",
+  FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()@*Generates a hidden form field (token anti-fraud), which is checked when the form is submitted.*@
+    @Html.ValidationSummary(true)@*helper to display error messages during model validation. If set to true, then will display only error messages of model level at top, and specific errors will be displayed next to the input fields*@
+    <fieldset>
+        @*---------------------------------------------------DATA---------------------------------------------------*@
+        <legend>Регистрация</legend>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.UserName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.UserName)
+            @Html.ValidationMessageFor(model => model.UserName)
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Email)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Email)
+            @Html.ValidationMessageFor(model => model.Email)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Password)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Password)
+            @Html.ValidationMessageFor(model => model.Password)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ConfirmPassword)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ConfirmPassword)
+            @Html.ValidationMessageFor(model => model.ConfirmPassword)
+        </div>
+        @*---------------------------------------------------CAPTCHA---------------------------------------------------*@  
+        <div class="editor-label">
+            @Html.Label("Введите капчу")
+        </div>
+        <div class="editor-label">
+            <label>
+                <img src="@Url.Action("Captcha", "Account")" alt="captcha" />
+            </label>
+        </div>
+        
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Captcha)
+            @Html.ValidationMessageFor(model => model.Captcha)
+        </div>         
+        @*---------------------------------------------------LOADF AVATAR PHOTO FORM---------------------------------------------------*@       
+        <div class="editor-label">
+            @Html.LabelFor(model => model.UserPhotoe)
+        </div>      
+        <div class ="editor-field">
+            Upload new image:
+            <input type="file" name="Image" value="~/image/defaultAvatar.jpg" />
+        </div>
+        <p>
+            <input type="submit" value="Зарегистрироваться" />
+        </p>
+    </fieldset>
+}
+
+@*---------------------------------------------------SCRIPT FOR VALIDATION HINT---------------------------------------------------*@
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

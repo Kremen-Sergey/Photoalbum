@@ -1,0 +1,137 @@
+﻿@model IEnumerable<PhotoalbumMvcPL.ViewModels.AlbumViewModel>
+
+@{
+    ViewBag.Title = "Albums";
+}
+
+@*---------------------------------------------------HEADER---------------------------------------------------*@
+@{
+@*---------------------------------------------------HEADER IF USER HAVE NO ALBUMS---------------------------------------------------*@
+    if (Model.Count() == 0)
+    {
+        if (Session["Email"] != null)
+        {
+            if (Session["UserIdFromAlbums"] != null)
+            {
+                if ((int)Session["UserIdFromSession"] == (int)Session["UserIdFromAlbums"])
+                {
+                    <b>У Вас пока нет альбомов</b>
+                }
+                else
+                {
+                    <b>У пользователя пока нет альбомов</b>
+                }
+
+            }
+        }
+        else
+        {
+            <b>У пользователя пока нет альбомов</b>
+        }
+    }
+    @*---------------------------------------------------HEADER IF USER HAVE ALBUMS---------------------------------------------------*@
+    else
+    {
+        if (Session["Email"] != null)
+        {
+            if (Session["UserIdFromAlbums"] != null)
+            {
+                if ((int) Session["UserIdFromSession"] == (int) Session["UserIdFromAlbums"])
+                {
+                    <h2>Мои альбомы</h2>
+                }
+                else
+                {
+                    <h2>Альбомы пользователя @Session["UserNameFromUserId"].ToString()</h2>
+                }
+
+            }
+        }
+        else
+        {
+            <h2>Альбомы пользователя @Session["UserNameFromUserId"].ToString()</h2>
+        }
+    }
+}
+@*---------------------------------------------------CREATE ALBUM LINK---------------------------------------------------*@
+@{
+    if (Session["Email"] != null)
+    {
+        if (Session["UserIdFromAlbums"] != null)
+        {
+            if ((int)Session["UserIdFromSession"] == (int)Session["UserIdFromAlbums"])
+            {
+                <table>
+                    <tr>
+                        <td>
+                            @Html.ActionLink("Создать новый альбом", "New", "Profile")
+                        </td>
+                    </tr>
+                </table>
+            }
+        }
+    }
+}
+@*---------------------------------------------------ALBUM LIST---------------------------------------------------*@
+<table>
+    @*---------------------------------------------------HEADER FOR ALBUM TABLE---------------------------------------------------*@
+    @{
+        if (Model.Count() != 0)
+        {
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.AlbumName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CreationTime)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserName)
+                </th>
+                <th></th>
+            </tr>
+        }
+    }
+    @*---------------------------------------------------ALBUM LIST FOR ALBUM TABLE---------------------------------------------------*@
+    @{
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.AlbumName, "Album", "Photo", new { albumId = item.Id }, null)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreationTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @*---------------------------------------------------DELETE ALBUM LINK---------------------------------------------------*@
+                    @if (Session["Email"] != null)
+                    {
+                        if (Session["UserIdFromAlbums"] != null)
+                        {
+                            if ((int)Session["UserIdFromSession"] == (int)Session["UserIdFromAlbums"])
+                            {
+                                <table>
+                                    <tr>
+                                        <td>
+                                            @Html.ActionLink("Удалить альбом", "Delete", "Profile", new { albumId = item.Id }, null)
+                                        </td>
+                                    </tr>
+                                </table>
+                            }
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    }
+</table>   

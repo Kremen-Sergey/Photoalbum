@@ -1,0 +1,21 @@
+﻿@*---------------------------------------------------MENU FOR ALL PAGES---------------------------------------------------*@
+<ul>
+    @if (HttpContext.Current.User.Identity.IsAuthenticated)
+    {
+            <li>@HttpContext.Current.User.Identity.Name
+                @if (HttpContext.Current.User.IsInRole("admin"))
+                {
+                    <b> У Вас есть права администратора </b>
+                }        
+            </li>
+            <li>@Html.ActionLink("Мои альбомы", "Me", "Profile")</li>
+            <li>@Html.ActionLink("Выход", "LogOff", "Account")</li>
+        
+    }
+    else
+    {
+            <li>@Html.ActionLink("Вход", "Login", "Account")</li>
+            <li>@Html.ActionLink("Регистрация", "Register", "Account")</li>
+    }
+    <li>@Html.ActionLink("Все пользователи", "AllUsers", "Account")</li>
+</ul>

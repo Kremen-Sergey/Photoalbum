@@ -1,0 +1,74 @@
+﻿@model IEnumerable<PhotoalbumMvcPL.ViewModels.UserViewModel>
+
+@{
+    ViewBag.Title = "All users";
+}
+
+<h2>Зарегистрированные пользователи</h2>
+@*---------------------------------------------------ALL USERS TABLE---------------------------------------------------*@
+<table>
+    <tr>
+        <th>
+
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>     
+        <th>
+            @if (HttpContext.Current.User.IsInRole("admin"))
+            {
+                <h3>@Html.DisplayNameFor(model => model.Email)</h3>
+            }           
+        </th>
+        <th>
+            @if (HttpContext.Current.User.IsInRole("admin"))
+            {
+                @Html.DisplayNameFor(model => model.Role)
+            }
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CreationDate)
+        </th> 
+        <th>
+
+        </th>     
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @if (item.UserPhotoe != null)
+            {
+                <div style="float: left; margin-right: 20px">
+                    <img width="75" height="75" src="@Url.Action("GetImage", "Account", new {userId= item.Id })" />
+                </div>
+            }
+        </td>
+        <td>
+            @Html.ActionLink(item.UserName, "Albums", "Profile", new { userId =item.Id},null)
+        </td>
+        <td>
+            @if (HttpContext.Current.User.IsInRole("admin"))
+            {
+            @Html.DisplayFor(modelItem => item.Email)
+            }
+        </td>
+        <td>
+            @if (HttpContext.Current.User.IsInRole("admin"))
+            {
+                @Html.DisplayFor(modelItem => item.Role)
+            }
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreationDate)
+        </td>       
+        <td>           
+            @if (HttpContext.Current.User.IsInRole("admin"))
+            {
+            <h3>@Html.ActionLink("Удалить пользователя", "Delete", "Account", new { userId =item.Id},null)</h3>
+            }          
+        </td>
+     </tr>
+}
+</table>

@@ -1,0 +1,206 @@
+﻿@using PhotoalbumMvcPL.ViewModels
+
+@model IEnumerable<PhotoViewModel>
+
+@{
+    ViewBag.Title = "Photoes";
+}
+
+<h2>Альбом @Html.ActionLink(Session["AlbumName"].ToString(), "Album", "Photo", new { albumId = (int)Session["AlbumId"] }, null) пользователя @Html.ActionLink(Session["UserNameFromAlbum"].ToString(), "Albums", "Profile", new { userId = (int)Session["UserIdFromAlbum"] }, null) </h2>
+<table align="right" width=device-width>
+    <tr>
+        <td width="80%" align="center" valign="top">
+            @*---------------------------------------------------PHOTO---------------------------------------------------*@
+            <div style="float: none; padding-top:  80px; padding-bottom: 80px; background-color: darkgray;">
+                <img style="max-width: 100%" src="@Url.Action("GetImage", "Photo", new {photoId = Session["PhotoId"]},null)" />
+            </div>
+            @*---------------------------------------------------SHARE BUTTONS---------------------------------------------------*@
+            <script type="text/javascript" src="//yastatic.net/share/share.js" charset="utf-8"></script>
+            <div class="yashare-auto-init" data-yasharel10n="ru" data-yasharetype="link" data-yasharequickservices="vkontakte,facebook,twitter,lj,gplus"></div>
+            
+            
+
+            @*---------------------------------------------------DESCRIPTION---------------------------------------------------*@
+            <div align="center">
+                @Session["Description"].ToString()
+            </div>
+            @*---------------------------------------------------DELETE LINK---------------------------------------------------*@
+            @{
+                if (Session["Email"] != null)
+                {
+                    if (Session["UserIdFromAlbum"] != null)
+                    {
+                        if ((int) Session["UserIdFromSession"] == (int) Session["UserIdFromAlbum"])
+                        {
+                            <h3>@Html.ActionLink("Удалить", "Delete", "Photo", new {photoId = (int) Session["PhotoId"]}, null)</h3>
+                            <h3>@Html.ActionLink("Редактировать описание", "Edit", "Photo", new { photoId = (int)Session["PhotoId"] }, null)</h3>                                                                        
+                        }
+                    }
+                }
+}         
+            @*---------------------------------------------------VIEW PICTURE LINK---------------------------------------------------*@
+            <h3>@Html.ActionLink("Фото", "ViewPicture", "Photo", new { photoId = (int)Session["PhotoId"] }, null)</h3>       
+            @*---------------------------------------------------ADD COMMENT FORM---------------------------------------------------*@
+            @if (HttpContext.Current.User.Identity.IsAuthenticated)
+            {
+                using (Html.BeginForm("Picture", "Photo"))
+                 {
+                     <div class="editor-field">
+                         Добавить комментарий
+                         <input type="text" name="comment" />
+                     </div>
+                     <p>
+                         <input type="submit" value="Добавить" />
+                     </p>
+                 }
+            }
+            @*---------------------------------------------------COMMENTS--------------------------------------------------*@
+            <table width="80%">
+                @foreach (CommentViewModel item in ViewBag.CommentList)
+                {
+                    <tr valign="bottom">
+                        <td width="80">
+                            @if (item.UserPhotoe != null)
+                            {
+                                <img width="75" height="75" src="@Url.Action("GetImage", "Account", new {userId = item.UserId})" />
+                            }
+                            else
+                            {
+                                <img width="75" height="75" src="~/image/deletedAvatar.jpg">
+                            }
+                        </td>
+                        <td valign="top">
+                            <b>
+                                @if (item.UserName == "DELETED")
+                                {
+                                    @item.UserName;
+                                }
+                                else
+                                {
+                                    @Html.ActionLink(item.UserName, "Albums", "Profile", new { userId = item.UserId }, null)
+                                }
+                            </b>
+                        </td>
+                        <td valign="top">
+                            @item.TextComment
+                        </td>
+                        <td width="30" align="right" valign="top">
+                            @item.CreateTime
+                        </td>
+                    </tr>
+
+                }
+            </table>
+        </td>
+        @*---------------------------------------------------PHOTO PREVIEW---------------------------------------------------*@
+        <td align="right" valign="top">
+            <table align="center" valign="top">
+                <tr>
+                    <td valign="top">
+                        <table class="photo-table-preview" valign="top">
+                            @{
+                                int i = 0;
+                                foreach (var item in Model)
+                                {
+                                    if (i % 4 == 0)
+                                    {
+                                        if (item.ImagePhotoe != null)
+                                        {
+                                            <tr align="center">
+                                                <td align="center">
+                                                    <div>
+                                                        <a href=@Url.Action("Picture","Photo", new{photoId=item.Id},null)>
+                                                            <img class="photo-preview" src="@Url.Action("GetImage", "Photo", new {photoId = item.Id})" />
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    i++;
+                                }
+                            }
+                        </table>
+                    </td>
+                    <td valign="top">
+                        <table class="photo-table-preview" valign="top">
+                            @{
+                                int j = 0;
+                                foreach (var item in Model)
+                                {
+                                    if (j % 4 == 1)
+                                    {
+                                        if (item.ImagePhotoe != null)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div>
+                                                        <a href=@Url.Action("Picture","Photo", new{photoId=item.Id},null)>
+                                                            <img class="photo-preview" src="@Url.Action("GetImage", "Photo", new {photoId = item.Id})" />
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    j++;
+                                }
+                            }
+                        </table>
+                    </td>
+                    <td valign="top">
+                        <table class="photo-table-preview" valign="top">
+                            @{
+                                int k = 0;
+                                foreach (var item in Model)
+                                {
+                                    if (k % 4 == 2)
+                                    {
+                                        if (item.ImagePhotoe != null)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div>
+                                                        <a href=@Url.Action("Picture","Photo", new{photoId=item.Id},null)>
+                                                            <img class="photo-preview" src="@Url.Action("GetImage", "Photo", new {photoId = item.Id})" />
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    k++;
+                                }
+                            }
+                        </table>
+                    </td>
+                    <td valign="top">
+                        <table class="photo-table-preview" valign="top">
+                            @{
+                                int l = 0;
+                                foreach (var item in Model)
+                                {
+                                    if (l % 4 == 3)
+                                    {
+                                        if (item.ImagePhotoe != null)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div>
+                                                        <a href=@Url.Action("Picture","Photo", new{photoId=item.Id},null)>
+                                                            <img class="photo-preview" src="@Url.Action("GetImage", "Photo", new {photoId = item.Id})" />
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    l++;
+                                }
+                            }
+                        </table>
+                    </td>
+            </table>
+        </td>
+    </tr>
+</table>
