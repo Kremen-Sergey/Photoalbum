@@ -1,4 +1,6 @@
-﻿@{
+﻿@model string
+
+@{
     Layout = null;
 }
 
@@ -10,9 +12,12 @@
     <title>Error</title>
 </head>
 <body>
-    <hgroup>
+
         <h1>Error.</h1>
-        <h2>An error occurred while processing your request.</h2>
-    </hgroup>
+    <h2>В процессе выполнения запроса произошла ошибка</h2>
+    @ViewBag.Error
+    <a href="javascript:history.back()" onMouseOver="window.status='Назад';return true">Назад</a>
+
 </body>
 </html>
+

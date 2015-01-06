@@ -72,18 +72,26 @@ namespace PhotoalbumMvcPL.Controllers
             if ((image != null)&&(Session["AlbumId"]!=null))
             {
                 int albumid = (int)Session["AlbumId"];
-                byte[] photo = new byte[image.ContentLength];
-                image.InputStream.Read(photo, 0, image.ContentLength);
-                photoService.Create(new PhotoeEntity()
+                try
+                {       
+                    byte[] photo = new byte[image.ContentLength];
+                    image.InputStream.Read(photo, 0, image.ContentLength);
+                    photoService.Create(new PhotoeEntity()
+                    {
+                        AlbumId = albumid,
+                        Like = 0,
+                        Description = "...",
+                        ImagePhotoe = photo,
+                        ImagePhotoMimeType = image.ContentType,
+                        AddTime = DateTime.Now
+
+                    });
+                }
+                catch (Exception e)
                 {
-                    AlbumId = albumid,
-                    Like = 0,
-                    Description = "...",
-                    ImagePhotoe = photo,
-                    ImagePhotoMimeType = image.ContentType,
-                    AddTime = DateTime.Now
-              
-                });
+                    ViewBag.Error="Возможная причина ошибки: загружаемый файл не яваляется изображением или превышает размер 100 Мб";
+                    return View("Error", (object)Request.UrlReferrer.Segments[2]); 
+                }
                 return RedirectToAction("Album", "Photo", new { albumId = albumid });              
             }
             return RedirectToAction("Album", "Photo", new { albumId = Session["AlbumId"] });  
@@ -267,6 +275,46 @@ namespace PhotoalbumMvcPL.Controllers
             photoService.Delete(photo);
             return RedirectToAction("Album", "Photo" , new {albumId=(int)Session["AlbumId"]});
         }
+        #endregion
+
+        #region search
+        //[ChildActionOnly]
+        [HttpGet]
+        public ActionResult Search()
+        {
+            return PartialView("SearchField");
+        }
+
+        //[ChildActionOnly]
+        [HttpPost]
+        public ActionResult Search(string strRequest)
+        {
+            return RedirectToAction("SearchResult", "Photo", new { stringRequest =strRequest});
+        }
+
+        public ActionResult SearchResult (string stringRequest)
+        {
+            if (stringRequest == null)
+            {
+                return null;
+            }
+            IEnumerable<PhotoeEntity> photoes = photoService.GetAll();
+            if (photoes == null)
+            {
+                return null;
+            }
+            IEnumerable<PhotoeEntity> selectedPhotoes = from p in photoes
+                where p.Description.ToUpper().Contains(stringRequest.ToUpper())
+                select p;
+            return View(selectedPhotoes.Select(p => new SearchPhotoViewModel()
+            {
+                Id = p.Id,
+                Description = p.Description,
+                ImagePhotoe = p.ImagePhotoe,
+                ImagePhotoMimeType = p.ImagePhotoMimeType,
+            }));
+        }
+
         #endregion
 
     }

@@ -1,0 +1,127 @@
+﻿@using PhotoalbumMvcPL.ViewModels
+
+@model IEnumerable<SearchPhotoViewModel>
+
+
+@{
+    ViewBag.Title = "Search result";
+}
+
+@{
+    if ((Model == null) || (Model.Count() == 0))
+    {
+        <b>Фотографий с таким описанием не найдено</b>
+    }
+    else
+    {
+<h2>Результаты поиска</h2>
+
+<table align="center" valign="top">
+    <tr>
+        <td valign="top">
+            <table class="photo-table" valign="top">
+                @{
+                    int i = 0;
+                    foreach (var item in Model)
+                    {
+                        if (i % 4 == 0)
+                        {
+                            if (item.ImagePhotoe != null)
+                            {
+                                <tr>
+                                    <td>
+                                        <div style="float: left">
+                                            <a href=@Url.Action("Picture","Photo", new{photoId=item.Id},null)>
+                                                <img width="400" src="@Url.Action("GetImage", "Photo", new {photoId = item.Id})" />
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        i++;
+                    }
+                }
+            </table>
+        </td>
+        <td valign="top">
+            <table class="photo-table">
+                @{
+                    int j = 0;
+                    foreach (var item in Model)
+                    {
+                        if (j % 4 == 1)
+                        {
+                            if (item.ImagePhotoe != null)
+                            {
+                                <tr>
+                                    <td>
+                                        <div style="float: left; margin-right: 20px">
+                                            <a href=@Url.Action("Picture", "Photo", new { photoId = item.Id }, null)>
+                                                <img width="400" src="@Url.Action("GetImage", "Photo", new {photoId = item.Id})" />
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        j++;
+                    }
+                }
+            </table>
+        </td>
+        <td valign="top">
+            <table class="photo-table">
+                @{
+                    int k = 0;
+                    foreach (var item in Model)
+                    {
+                        if (k % 4 == 2)
+                        {
+                            if (item.ImagePhotoe != null)
+                            {
+                                <tr>
+                                    <td>
+                                        <div style="float: left; margin-right: 20px">
+                                            <a href=@Url.Action("Picture", "Photo", new { photoId = item.Id }, null)>
+                                                <img width="400" src="@Url.Action("GetImage", "Photo", new {photoId = item.Id})" />
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        k++;
+                    }
+                }
+            </table>
+        </td>
+        <td valign="top">
+            <table class="photo-table">
+                @{
+                    int l = 0;
+                    foreach (var item in Model)
+                    {
+                        if (l % 4 == 3)
+                        {
+                            if (item.ImagePhotoe != null)
+                            {
+                                <tr>
+                                    <td>
+                                        <div style="float: left; margin-right: 20px">
+                                            <a href=@Url.Action("Picture", "Photo", new { photoId = item.Id }, null)>
+                                                <img width="400" src="@Url.Action("GetImage", "Photo", new {photoId = item.Id})" />
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        l++;
+                    }
+                }
+            </table>
+        </td>
+</table>
+    }
+}

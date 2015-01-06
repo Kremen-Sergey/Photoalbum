@@ -159,6 +159,7 @@
     <Compile Include="ViewModels\LogOnViewModel.cs" />
     <Compile Include="ViewModels\PhotoViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
+    <Compile Include="ViewModels\SearchPhotoViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -261,6 +262,8 @@
     <Content Include="Views\Photo\Picture.cshtml" />
     <Content Include="Views\Photo\ViewPicture.cshtml" />
     <Content Include="Views\Photo\Edit.cshtml" />
+    <Content Include="Views\Shared\SearchField.cshtml" />
+    <Content Include="Views\Photo\SearchResult.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="image\" />

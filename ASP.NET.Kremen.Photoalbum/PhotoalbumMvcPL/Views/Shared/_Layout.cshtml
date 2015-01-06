@@ -10,8 +10,10 @@
 </head>
 <body>
     @Html.Action("Menu", "Account")
-    @RenderBody()
+    @Html.Action("Search","Photo")
 
+    @RenderBody()
+       
     @Scripts.Render("~/bundles/jquery")
     @RenderSection("scripts", required: false)
 </body>

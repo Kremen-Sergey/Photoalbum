@@ -1,0 +1,11 @@
+﻿<div>
+    @*---------------------------------------------------ADD COMMENT FORM---------------------------------------------------*@  
+    @using (Html.BeginForm("Search", "Photo"))
+    {
+        <div class="editor-field">
+            Поиск по описанию фото
+            <input type="text" name="strRequest" />
+            <input type="submit" value="Поиск" />
+        </div>
+    }
+</div>
