@@ -10,10 +10,11 @@
 </head>
 <body>
     @Html.Action("Menu", "Account")
-    @Html.Action("Search","Photo")
+    @Html.Partial("SearchField")
+    @*@Html.Action("Search", "Photo")*@
 
     @RenderBody()
-       
+
     @Scripts.Render("~/bundles/jquery")
     @RenderSection("scripts", required: false)
 </body>

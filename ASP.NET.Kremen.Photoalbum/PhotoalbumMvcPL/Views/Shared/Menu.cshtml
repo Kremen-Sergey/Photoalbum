@@ -3,10 +3,21 @@
     @if (HttpContext.Current.User.Identity.IsAuthenticated)
     {
             <li>@HttpContext.Current.User.Identity.Name
-                @if (HttpContext.Current.User.IsInRole("admin"))
+                @*@if (HttpContext.Current.User.IsInRole("admin"))
                 {
                     <b> У Вас есть права администратора </b>
-                }        
+                }*@  
+                @{
+                    if (Session["IsAdminFlag"] != null)
+                    {
+                        if ((bool)Session["IsAdminFlag"])
+                        {
+                            <b>
+                                У вас есть права администратора
+                            </b>
+                        }
+                    }
+                }     
             </li>
             <li>@Html.ActionLink("Мои альбомы", "Me", "Profile")</li>
             <li>@Html.ActionLink("Выход", "LogOff", "Account")</li>

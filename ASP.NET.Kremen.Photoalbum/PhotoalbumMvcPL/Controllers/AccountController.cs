@@ -5,11 +5,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using BLL.Interfaces.Services;
-using BLL.Mappers;
 using PhotoalbumMvcPL.Infrastructure;
 using PhotoalbumMvcPL.Providers;
 using PhotoalbumMvcPL.ViewModels;
+using BLL.Interfaces.Services;
+using BLL.Mappers;
 
 
 namespace PhotoalbumMvcPL.Controllers
@@ -60,9 +60,10 @@ namespace PhotoalbumMvcPL.Controllers
         [HttpPost]
         public ActionResult Login(LogOnViewModel viewModel, string returnUrl)
         {
+          
             if (ModelState.IsValid)
             {
-                if (Membership.ValidateUser(viewModel.Email, viewModel.Password))
+                if (((CustomMembershipProvider)Membership.Provider).ValidateUser(viewModel.Email, viewModel.Password, userService, roleService))
                 {
                     FormsAuthentication.SetAuthCookie(viewModel.Email, viewModel.RememberMe);
                     if (Url.IsLocalUrl(returnUrl))
@@ -116,21 +117,30 @@ namespace PhotoalbumMvcPL.Controllers
             }
             if (ModelState.IsValid)
             {
-                if (image != null)
+                try
                 {
-                    viewModel.UserPhotoMimeType = image.ContentType;
-                    viewModel.UserPhotoe = new byte[image.ContentLength];
-                    image.InputStream.Read(viewModel.UserPhotoe, 0, image.ContentLength);
+                    if (image != null)
+                    {
+                        viewModel.UserPhotoMimeType = image.ContentType;
+                        viewModel.UserPhotoe = new byte[image.ContentLength];
+                        image.InputStream.Read(viewModel.UserPhotoe, 0, image.ContentLength);
+                    }
+                    else
+                    {
+                        string filePath = Server.MapPath("~/image/defaultAvatar.jpg"); //relative path for constructor
+                        byte[] defaultAvatar = System.IO.File.ReadAllBytes(filePath); //read image from path
+                        viewModel.UserPhotoMimeType = "image/jpeg";
+                        viewModel.UserPhotoe = defaultAvatar;
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    string filePath = Server.MapPath("~/image/defaultAvatar.jpg");//relative path for constructor
-                    byte[] defaultAvatar = System.IO.File.ReadAllBytes(filePath);//read image from path
-                    viewModel.UserPhotoMimeType = "image/jpeg";
-                    viewModel.UserPhotoe = defaultAvatar;
+                    ViewBag.Error =
+                        "Возможная причина ошибки: загружаемый файл не яваляется изображением или превышает размер 100 Мб";
+                    return View("Error", (object) Request.UrlReferrer.Segments[2]);
                 }
                 Session["Email"] = viewModel.Email;
-                MembershipUser membershipUser = ((CustomMembershipProvider)Membership.Provider).CreateUser(viewModel.UserName, viewModel.Password, viewModel.Email, viewModel.UserPhotoMimeType, viewModel.UserPhotoe);           
+                MembershipUser membershipUser = ((CustomMembershipProvider)Membership.Provider).CreateUser(viewModel.UserName, viewModel.Password, viewModel.Email, viewModel.UserPhotoMimeType, viewModel.UserPhotoe, userService, roleService);           
                 if (membershipUser != null)
                 {
                     FormsAuthentication.SetAuthCookie(viewModel.Email, false);

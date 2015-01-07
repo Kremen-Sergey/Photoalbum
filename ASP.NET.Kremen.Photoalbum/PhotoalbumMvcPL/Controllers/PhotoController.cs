@@ -289,10 +289,10 @@ namespace PhotoalbumMvcPL.Controllers
         [HttpPost]
         public ActionResult Search(string strRequest)
         {
-            return RedirectToAction("SearchResult", "Photo", new { stringRequest =strRequest});
+            return RedirectToAction("SearchResult", "Photo", new { stringRequest = strRequest });
         }
 
-        public ActionResult SearchResult (string stringRequest)
+        public ActionResult SearchResult(string stringRequest)
         {
             if (stringRequest == null)
             {
@@ -304,8 +304,8 @@ namespace PhotoalbumMvcPL.Controllers
                 return null;
             }
             IEnumerable<PhotoeEntity> selectedPhotoes = from p in photoes
-                where p.Description.ToUpper().Contains(stringRequest.ToUpper())
-                select p;
+                                                        where p.Description.ToUpper().Contains(stringRequest.ToUpper())
+                                                        select p;
             return View(selectedPhotoes.Select(p => new SearchPhotoViewModel()
             {
                 Id = p.Id,

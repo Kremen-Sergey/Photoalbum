@@ -2,77 +2,74 @@
 using System.Linq;
 using System.Web.Helpers;
 using System.Web.Security;
-using ORM;
+using BLL.Interfaces.Entities;
+using BLL.Interfaces.Services;
 
 namespace PhotoalbumMvcPL.Providers
 {
     public class CustomMembershipProvider : MembershipProvider
     {
 
-        public MembershipUser CreateUser(string userName, string password, string email, string userPhotoMimeType, byte[] userPhotoe)
+        public MembershipUser CreateUser(string userName, string password, string email, string userPhotoMimeType, byte[] userPhotoe, IUserService userService, IRoleService roleService)
         {
-            MembershipUser membershipUser = GetUser(email, false);
+            MembershipUser membershipUser = GetUser(email, false, userService, roleService);
             if (membershipUser != null)
             {
                 return null;
             }
-            using (var context = new EntityModel())
+            var user = new UserEntity()
             {
-                var user = new User
-                {
-                    UserName = userName,
-                    Email = email,
-                    Password = Crypto.HashPassword(password),
-                    CreationTime = DateTime.Now,
-                    LastUpdateTime = DateTime.Now,
-                    UserPhotoMimeType = userPhotoMimeType, 
-                    UserPhotoe = userPhotoe
-                };
-                var role = context.Roles.FirstOrDefault(r => r.RoleName == "user");
+                UserName = userName,
+                Email = email,
+                Password = Crypto.HashPassword(password),
+                CreationTime = DateTime.Now,
+                LastUpdateTime = DateTime.Now,
+                UserPhotoMimeType = userPhotoMimeType,
+                UserPhotoe = userPhotoe
+            };
+            var role = roleService.GetAll().FirstOrDefault(r => r.RoleName.ToUpper() == "USER");
                 if (role != null)
                 {
                     user.RoleId = role.Id;
                 }
-                context.Users.Add(user);
-                context.SaveChanges();
-                membershipUser = GetUser(email, false);
-                return membershipUser;
-            }
+            userService.Create(user);
+            membershipUser = GetUser(email, false, userService, roleService);
+            return membershipUser;
+        }
 
+        public bool ValidateUser(string email, string password, IUserService userService, IRoleService roleService)
+
+        {
+            var user = userService.GetAll().FirstOrDefault(u => u.Email.ToUpper() == email.ToUpper());
+            if (user != null && Crypto.VerifyHashedPassword(user.Password, password))
+                {
+                    return true;
+                }
+            return false;
+        }
+
+        public MembershipUser GetUser(string email, bool userIsOnline, IUserService userService,IRoleService roleService)
+        {
+            var user = userService.GetAll().FirstOrDefault(u => u.Email.ToUpper() == email.ToUpper());
+            if (user == null) return null;
+            var memberUser = new MembershipUser("CustomMembershipProvider", user.Email,
+                null, null, null, null,
+                false, false, DateTime.MinValue, DateTime.MinValue, DateTime.MinValue, DateTime.MinValue, DateTime.MinValue);
+            return memberUser;
+        }
+      
+        public override MembershipUser CreateUser(string username,  string password, string email, string passwordQuestion,
+            string passwordAnswer, bool isApproved, object providerUserKey, out MembershipCreateStatus status)
+        {
+            throw new NotImplementedException();
         }
 
         public override bool ValidateUser(string email, string password)
         {
-            using (var context = new EntityModel())
-            {
-                User user = (from u in context.Users
-                             where u.Email.ToUpper() == email.ToUpper()
-                             select u).FirstOrDefault();
-                if (user != null && Crypto.VerifyHashedPassword(user.Password, password))
-                {
-                    return true;
-                }
-            }
-            return false;
+            throw new NotImplementedException();
         }
 
         public override MembershipUser GetUser(string email, bool userIsOnline)
-        {
-            using (var context = new EntityModel())
-            {
-                var user = (from u in context.Users
-                            where u.Email.ToUpper() == email.ToUpper()
-                            select u).FirstOrDefault();
-                if (user == null) return null;
-                var memberUser = new MembershipUser("CustomMembershipProvider", user.Email,
-                    null, null, null, null,
-                    false, false, DateTime.MinValue, DateTime.MinValue, DateTime.MinValue, DateTime.MinValue, DateTime.MinValue);
-                return memberUser;
-            }
-        }
-
-        public override MembershipUser CreateUser(string username,  string password, string email, string passwordQuestion,
-            string passwordAnswer, bool isApproved, object providerUserKey, out MembershipCreateStatus status)
         {
             throw new NotImplementedException();
         }

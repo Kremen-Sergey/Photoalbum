@@ -13,13 +13,15 @@ namespace PhotoalbumMvcPL.Controllers
         #region fields
         private readonly IAlbumService albumService;
         private readonly IUserService userService;
+        private readonly IRoleService roleService;
         #endregion
 
         #region constructor
-        public ProfileController(IAlbumService albumService, IUserService userService)
+        public ProfileController(IAlbumService albumService, IUserService userService, IRoleService roleService)
         {
             this.albumService = albumService;
             this.userService = userService;
+            this.roleService = roleService;
         }
         #endregion
 
@@ -119,11 +121,20 @@ namespace PhotoalbumMvcPL.Controllers
         #region me
         public ActionResult Me()
         {
+
             if (Session["Email"] != null)
             {
+                Session["IsAdminFlag"] = null;
                 var email = Session["Email"].ToString();           
                 var user = userService.GetAll().FirstOrDefault(u => u.Email.ToUpper() == email.ToUpper());
-                if (user!=null) return RedirectToAction("Albums", "Profile", new { userId = user.Id });   
+                if (user != null)
+                {
+                    var role = roleService.GetById(user.RoleId);
+                    if (role.RoleName.ToUpper()=="ADMIN") {Session["IsAdminFlag"]=true;}
+                    else {Session["IsAdminFlag"] = false;}
+                    return RedirectToAction("Albums", "Profile", new { userId = user.Id });
+                } 
+                                
             }
                 return RedirectToAction("Login", "Account");
         }
