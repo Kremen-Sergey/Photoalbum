@@ -1,11 +1,11 @@
-﻿<div>
+﻿<div align="right" style="margin-right: 30px">
     @*---------------------------------------------------ADD COMMENT FORM--------------------------------------------------- *@
     @using (Html.BeginForm("Search", "Photo"))
     {
         <div class="editor-field">
-            Поиск по описанию фото
+            <h4>Поиск по описанию фото</h4>
             <input type="text" name="strRequest" />
-            <input type="submit" value="Поиск" />
+            <input type="submit" value="Поиск" class="btn btn-info" />
         </div>
     }
 </div>

@@ -21,7 +21,7 @@
             
 
             @*---------------------------------------------------DESCRIPTION---------------------------------------------------*@
-            <div align="center">
+            <div align="center" style="padding: 10px">
                 @Session["Description"].ToString()
             </div>
             @*---------------------------------------------------DELETE LINK---------------------------------------------------*@
@@ -49,9 +49,9 @@
                          Добавить комментарий
                          <input type="text" name="comment" />
                      </div>
-                     <p>
-                         <input type="submit" value="Добавить" />
-                     </p>
+                     <div style="padding: 20px">
+                        <input type="submit" value="Добавить" class="btn btn-default" />
+                     </div>
                  }
             }
             @*---------------------------------------------------COMMENTS--------------------------------------------------*@

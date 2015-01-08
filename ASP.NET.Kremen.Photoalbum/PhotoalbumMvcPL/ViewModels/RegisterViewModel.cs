@@ -8,7 +8,7 @@ namespace PhotoalbumMvcPL.ViewModels
     {
         [ScaffoldColumn(false)]//The property will not be seen any form or in the code page
         public int Id { get; set; }
-        [Display(Name = "Введите имя пользователя")]
+        [Display(Name = "Имя пользователя")]
         [Required(ErrorMessage = "Поле обязательно для заполнения")]
         public string UserName { get; set; }
 
@@ -35,7 +35,7 @@ namespace PhotoalbumMvcPL.ViewModels
         [DataType(DataType.Date)]
         public DateTime CreationTime { get; set; }
 
-        [Display(Name = "Аватар пользователя")]
+        [Display(Name = "Аватар")]
 
         public byte[] UserPhotoe { get; set; }//The property will not be visible in the page code default type without attributes
 

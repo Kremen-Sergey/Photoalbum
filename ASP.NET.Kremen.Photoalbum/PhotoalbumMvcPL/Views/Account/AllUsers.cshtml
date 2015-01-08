@@ -8,17 +8,17 @@
 @*---------------------------------------------------ALL USERS TABLE---------------------------------------------------*@
 <table>
     <tr>
-        <th>
+        <th class="table-paddings">
 
         </th>
-        <th>
+        <th class="table-paddings">
             @Html.DisplayNameFor(model => model.UserName)
         </th>     
-        <th>
+        <th class="table-paddings">
             @*@if (HttpContext.Current.User.IsInRole("admin"))
             {
                 <h3>@Html.DisplayNameFor(model => model.Email)</h3>
-            }*@ 
+            }*@
             @{
                 if (Session["IsAdminFlag"] != null)
                 {
@@ -27,9 +27,9 @@
                         <h3>@Html.DisplayNameFor(model => model.Email)</h3>
                     }
                 }
-            }               
+            }
         </th>
-        <th>
+        <th class="table-paddings">
             @*@if (HttpContext.Current.User.IsInRole("admin"))
             {
                 @Html.DisplayNameFor(model => model.Role)
@@ -42,20 +42,17 @@
                         @Html.DisplayNameFor(model => model.Role)
                     }
                 }
-            }           
+            }
         </th>
-        <th>
+        <th class="table-paddings">
             @Html.DisplayNameFor(model => model.CreationDate)
         </th> 
-        <th>
-
-        </th>     
-        <th></th>
+        <th class="table-paddings"></th>     
     </tr>
 
 @foreach (var item in Model) {
     <tr>
-        <td>
+        <td class="table-paddings">
             @if (item.UserPhotoe != null)
             {
                 <div style="float: left; margin-right: 20px">
@@ -63,57 +60,56 @@
                 </div>
             }
         </td>
-        <td>
-            @Html.ActionLink(item.UserName, "Albums", "Profile", new { userId =item.Id},null)
+        <td class="table-paddings">
+            @Html.ActionLink(item.UserName, "Albums", "Profile", new { userId = item.Id }, null)
         </td>
-        <td>
+        <td class="table-paddings">
             @*@if (HttpContext.Current.User.IsInRole("admin"))
             {
             @Html.DisplayFor(modelItem => item.Email)
             }*@
             @{
-                if (Session["IsAdminFlag"] != null)
+            if (Session["IsAdminFlag"] != null)
+            {
+                if ((bool)Session["IsAdminFlag"])
                 {
-                    if ((bool)Session["IsAdminFlag"])
-                    {
-                        @Html.DisplayFor(modelItem => item.Email)
-                    }
+                    @Html.DisplayFor(modelItem => item.Email)
                 }
-            } 
+            }
+            }
         </td>
-        <td>
+        <td class="table-paddings">
             @*@if (HttpContext.Current.User.IsInRole("admin"))
             {
                 @Html.DisplayFor(modelItem => item.Role)
             }*@
             @{
-                if (Session["IsAdminFlag"] != null)
+            if (Session["IsAdminFlag"] != null)
+            {
+                if ((bool)Session["IsAdminFlag"])
                 {
-                     if ((bool)Session["IsAdminFlag"])
-                     {
-                          @Html.DisplayFor(modelItem => item.Role)
-                     }
+                     @Html.DisplayFor(modelItem => item.Role)
                 }
             }
-            
+            }
         </td>
-        <td>
+        <td class="table-paddings">
             @Html.DisplayFor(modelItem => item.CreationDate)
         </td>       
-        <td>           
+        <td class="table-paddings">
             @*@if (HttpContext.Current.User.IsInRole("admin"))
             {
             <h3>@Html.ActionLink("Удалить пользователя", "Delete", "Account", new { userId =item.Id},null)</h3>
-            }*@  
+            }*@
             @{
-                if (Session["IsAdminFlag"] != null)
+            if (Session["IsAdminFlag"] != null)
+            {
+                if ((bool)Session["IsAdminFlag"])
                 {
-                    if ((bool)Session["IsAdminFlag"])
-                    {
-                         @Html.ActionLink("Удалить пользователя", "Delete", "Account", new { userId = item.Id }, null)
-                    }
+                    @Html.ActionLink("Удалить пользователя", "Delete", "Account", new { userId = item.Id }, null)
                 }
-}        
+            }
+            }
         </td>
      </tr>
 }

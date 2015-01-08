@@ -11,27 +11,34 @@
 
     <fieldset>
         <legend>Вход в систему</legend>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Email)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Email)
-            @Html.ValidationMessageFor(model => model.Email)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Password)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Password)
-            @Html.ValidationMessageFor(model => model.Password)
+        
+        <div class="form-group">
+            <div class="col-sm-2 control-label">
+                @Html.LabelFor(model => model.Email)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Email)
+                @Html.ValidationMessageFor(model => model.Email)
+            </div>
         </div>
 
-        <p>
-            <input type="submit" value="Войти" />
-        </p>
-    </fieldset>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">
+                    @Html.LabelFor(model => model.Password)
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.Password)
+                    @Html.ValidationMessageFor(model => model.Password)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">Войти</button>
+                </div>
+            </div>
+
+</fieldset>
 }
 @*---------------------------------------------------SCRIPT FOR VALIDATION HINT---------------------------------------------------*@
 

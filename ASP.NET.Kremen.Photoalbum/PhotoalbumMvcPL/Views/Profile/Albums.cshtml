@@ -73,25 +73,25 @@
     }
 }
 @*---------------------------------------------------ALBUM LIST---------------------------------------------------*@
-<table>
+<table style="border-spacing: 50px 50px">
     @*---------------------------------------------------HEADER FOR ALBUM TABLE---------------------------------------------------*@
     @{
         if (Model.Count() != 0)
         {
             <tr>
-                <th>
+                <th class="table-paddings">
                     @Html.DisplayNameFor(model => model.AlbumName)
                 </th>
-                <th>
+                <th class="table-paddings">
                     @Html.DisplayNameFor(model => model.Description)
                 </th>
-                <th>
+                <th class="table-paddings">
                     @Html.DisplayNameFor(model => model.CreationTime)
                 </th>
-                <th>
+                <th class="table-paddings">
                     @Html.DisplayNameFor(model => model.UserName)
                 </th>
-                <th></th>
+                <th class="table-paddings"></th>
             </tr>
         }
     }
@@ -100,19 +100,19 @@
         foreach (var item in Model)
         {
             <tr>
-                <td>
+                <td class="table-paddings">
                     @Html.ActionLink(item.AlbumName, "Album", "Photo", new { albumId = item.Id }, null)
                 </td>
-                <td>
+                <td class="table-paddings">
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
-                <td>
+                <td class="table-paddings">
                     @Html.DisplayFor(modelItem => item.CreationTime)
                 </td>
-                <td>
+                <td class="table-paddings">
                     @Html.DisplayFor(modelItem => item.UserName)
                 </td>
-                <td>
+                <td class="table-paddings">
                     @*---------------------------------------------------DELETE ALBUM LINK---------------------------------------------------*@
                     @if (Session["Email"] != null)
                     {
