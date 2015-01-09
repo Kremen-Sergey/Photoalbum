@@ -6,22 +6,11 @@
         {
             <div style="color: white">
                 @HttpContext.Current.User.Identity.Name
-                @*@if (HttpContext.Current.User.IsInRole("admin"))
+                @if (HttpContext.Current.User.IsInRole("admin"))
                     {
                         <b> У Вас есть права администратора </b>
-                    }*@
-                @{
-            if (Session["IsAdminFlag"] != null)
-            {
-                if ((bool)Session["IsAdminFlag"])
-                {
-                    <b>
-                        У вас есть права администратора
-                    </b>
-                }
-            }
-                }
-            </div>
+                    }
+             </div>
             <button type="button" class="btn btn-warning active" >
                 @Html.ActionLink("Выход", "LogOff", "Account")
             </button>

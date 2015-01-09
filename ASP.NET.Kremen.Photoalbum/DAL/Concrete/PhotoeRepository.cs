@@ -36,6 +36,7 @@ namespace DAL.Concrete
         public DalPhotoe GetById(int key)
         {
             var ormphotoe = context.Set<Photoe>().FirstOrDefault(photoe => photoe.Id == key);
+            if (ormphotoe == null) { return null; }
             return new DalPhotoe()
             {
                 Id = ormphotoe.Id,

@@ -124,17 +124,12 @@ namespace PhotoalbumMvcPL.Controllers
 
             if (Session["Email"] != null)
             {
-                Session["IsAdminFlag"] = null;
                 var email = Session["Email"].ToString();           
                 var user = userService.GetAll().FirstOrDefault(u => u.Email.ToUpper() == email.ToUpper());
                 if (user != null)
                 {
-                    var role = roleService.GetById(user.RoleId);
-                    if (role.RoleName.ToUpper()=="ADMIN") {Session["IsAdminFlag"]=true;}
-                    else {Session["IsAdminFlag"] = false;}
                     return RedirectToAction("Albums", "Profile", new { userId = user.Id });
-                } 
-                                
+                }                               
             }
                 return RedirectToAction("Login", "Account");
         }

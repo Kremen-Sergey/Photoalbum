@@ -39,6 +39,7 @@ namespace BLL.Services
 
         public AlbumEntity GetById(int id)
         {
+            if (albumRepository.GetById(id) == null) { return null; }
             return albumRepository.GetById(id).ToBllAlbum();
         }
     }

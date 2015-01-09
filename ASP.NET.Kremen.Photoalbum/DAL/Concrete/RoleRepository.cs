@@ -31,6 +31,7 @@ namespace DAL.Concrete
         public DalRole GetById(int key)
         {
             var ormrole = context.Set<Role>().FirstOrDefault(role => role.Id == key);
+            if (ormrole == null) { return null; }
             return new DalRole()
             {
                 Id = ormrole.Id,

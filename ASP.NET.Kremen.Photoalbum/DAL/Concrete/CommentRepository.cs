@@ -33,6 +33,7 @@ namespace DAL.Concrete
         public DallComment GetById(int key)
         {
             var ormcomment = context.Set<Comment>().FirstOrDefault(comment => comment.Id == key);
+            if (ormcomment == null) { return null; }
             return new DallComment()
             {
                 Id = ormcomment.Id,

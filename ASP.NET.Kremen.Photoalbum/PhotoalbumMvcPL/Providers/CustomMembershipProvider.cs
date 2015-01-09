@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Helpers;
+using System.Web.Mvc;
 using System.Web.Security;
 using BLL.Interfaces.Entities;
 using BLL.Interfaces.Services;
@@ -10,9 +11,11 @@ namespace PhotoalbumMvcPL.Providers
     public class CustomMembershipProvider : MembershipProvider
     {
 
-        public MembershipUser CreateUser(string userName, string password, string email, string userPhotoMimeType, byte[] userPhotoe, IUserService userService, IRoleService roleService)
+        public MembershipUser CreateUser(string userName, string password, string email, string userPhotoMimeType, byte[] userPhotoe)
         {
-            MembershipUser membershipUser = GetUser(email, false, userService, roleService);
+            IUserService userService = DependencyResolver.Current.GetService<IUserService>();
+            IRoleService roleService = DependencyResolver.Current.GetService<IRoleService>();
+            MembershipUser membershipUser = GetUser(email, false);
             if (membershipUser != null)
             {
                 return null;
@@ -33,13 +36,14 @@ namespace PhotoalbumMvcPL.Providers
                     user.RoleId = role.Id;
                 }
             userService.Create(user);
-            membershipUser = GetUser(email, false, userService, roleService);
+            membershipUser = GetUser(email, false);
             return membershipUser;
         }
 
-        public bool ValidateUser(string email, string password, IUserService userService, IRoleService roleService)
+        public override bool ValidateUser(string email, string password)
 
         {
+            IUserService userService = DependencyResolver.Current.GetService<IUserService>();
             var user = userService.GetAll().FirstOrDefault(u => u.Email.ToUpper() == email.ToUpper());
             if (user != null && Crypto.VerifyHashedPassword(user.Password, password))
                 {
@@ -48,8 +52,9 @@ namespace PhotoalbumMvcPL.Providers
             return false;
         }
 
-        public MembershipUser GetUser(string email, bool userIsOnline, IUserService userService,IRoleService roleService)
+        public override MembershipUser GetUser(string email, bool userIsOnline)
         {
+            IUserService userService = DependencyResolver.Current.GetService<IUserService>();
             var user = userService.GetAll().FirstOrDefault(u => u.Email.ToUpper() == email.ToUpper());
             if (user == null) return null;
             var memberUser = new MembershipUser("CustomMembershipProvider", user.Email,
@@ -60,16 +65,6 @@ namespace PhotoalbumMvcPL.Providers
       
         public override MembershipUser CreateUser(string username,  string password, string email, string passwordQuestion,
             string passwordAnswer, bool isApproved, object providerUserKey, out MembershipCreateStatus status)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool ValidateUser(string email, string password)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override MembershipUser GetUser(string email, bool userIsOnline)
         {
             throw new NotImplementedException();
         }

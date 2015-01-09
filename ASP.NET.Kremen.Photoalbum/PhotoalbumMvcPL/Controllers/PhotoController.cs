@@ -90,7 +90,14 @@ namespace PhotoalbumMvcPL.Controllers
                 catch (Exception e)
                 {
                     ViewBag.Error="Возможная причина ошибки: загружаемый файл не яваляется изображением или превышает размер 100 Мб";
-                    return View("Error", (object)Request.UrlReferrer.Segments[2]); 
+                    if (Request.UrlReferrer != null)
+                    {
+                        return View("Error", (object) Request.UrlReferrer.Segments[2]);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Me", "Profile");
+                    }
                 }
                 return RedirectToAction("Album", "Photo", new { albumId = albumid });              
             }

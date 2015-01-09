@@ -38,6 +38,7 @@ namespace BLL.Services
 
         public PhotoeEntity GetById(int id)
         {
+            if (photoeRepository.GetById(id) == null) { return null; }
             return photoeRepository.GetById(id).ToBllPhotoe();
         }
 

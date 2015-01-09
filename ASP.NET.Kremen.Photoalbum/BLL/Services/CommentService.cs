@@ -38,6 +38,7 @@ namespace BLL.Services
 
         public CommentEntity GetById(int id)
         {
+            if (commentRepository.GetById(id) == null) { return null; }
             return commentRepository.GetById(id).ToBllComment();
         }
     }

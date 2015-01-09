@@ -63,7 +63,7 @@ namespace PhotoalbumMvcPL.Controllers
           
             if (ModelState.IsValid)
             {
-                if (((CustomMembershipProvider)Membership.Provider).ValidateUser(viewModel.Email, viewModel.Password, userService, roleService))
+                if (((CustomMembershipProvider)Membership.Provider).ValidateUser(viewModel.Email, viewModel.Password))
                 {
                     FormsAuthentication.SetAuthCookie(viewModel.Email, viewModel.RememberMe);
                     if (Url.IsLocalUrl(returnUrl))
@@ -140,7 +140,7 @@ namespace PhotoalbumMvcPL.Controllers
                     return View("Error", (object) Request.UrlReferrer.Segments[2]);
                 }
                 Session["Email"] = viewModel.Email;
-                MembershipUser membershipUser = ((CustomMembershipProvider)Membership.Provider).CreateUser(viewModel.UserName, viewModel.Password, viewModel.Email, viewModel.UserPhotoMimeType, viewModel.UserPhotoe, userService, roleService);           
+                MembershipUser membershipUser = ((CustomMembershipProvider)Membership.Provider).CreateUser(viewModel.UserName, viewModel.Password, viewModel.Email, viewModel.UserPhotoMimeType, viewModel.UserPhotoe);           
                 if (membershipUser != null)
                 {
                     FormsAuthentication.SetAuthCookie(viewModel.Email, false);

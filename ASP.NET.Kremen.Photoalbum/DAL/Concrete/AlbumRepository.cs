@@ -33,7 +33,8 @@ namespace DAL.Concrete
 
         public DalAlbum GetById(int key)
         {
-            var ormalbum = context.Set<Album>().Find(key);
+            var ormalbum = context.Set<Album>().FirstOrDefault(album => album.Id == key);
+            if (ormalbum == null) { return null; }
             return new DalAlbum()
             {
                 Id = ormalbum.Id,

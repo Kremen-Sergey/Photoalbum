@@ -38,7 +38,7 @@ namespace DAL.Concrete
 
         public DalUser GetById(int key)
         {
-            var ormuser = context.Set<User>().Find(key);
+            var ormuser = context.Set<User>().FirstOrDefault(user => user.Id == key);
             if (ormuser == null) {return null;}
             return new DalUser()
             {

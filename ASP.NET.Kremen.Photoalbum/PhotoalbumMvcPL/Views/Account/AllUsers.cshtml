@@ -15,33 +15,15 @@
             @Html.DisplayNameFor(model => model.UserName)
         </th>     
         <th class="table-paddings">
-            @*@if (HttpContext.Current.User.IsInRole("admin"))
+            @if (HttpContext.Current.User.IsInRole("admin"))
             {
                 <h3>@Html.DisplayNameFor(model => model.Email)</h3>
-            }*@
-            @{
-                if (Session["IsAdminFlag"] != null)
-                {
-                    if ((bool)Session["IsAdminFlag"])
-                    {
-                        <h3>@Html.DisplayNameFor(model => model.Email)</h3>
-                    }
-                }
             }
         </th>
         <th class="table-paddings">
-            @*@if (HttpContext.Current.User.IsInRole("admin"))
+            @if (HttpContext.Current.User.IsInRole("admin"))
             {
                 @Html.DisplayNameFor(model => model.Role)
-            }*@
-            @{
-                if (Session["IsAdminFlag"] != null)
-                {
-                    if ((bool)Session["IsAdminFlag"])
-                    {
-                        @Html.DisplayNameFor(model => model.Role)
-                    }
-                }
             }
         </th>
         <th class="table-paddings">
@@ -64,53 +46,26 @@
             @Html.ActionLink(item.UserName, "Albums", "Profile", new { userId = item.Id }, null)
         </td>
         <td class="table-paddings">
-            @*@if (HttpContext.Current.User.IsInRole("admin"))
+            @if (HttpContext.Current.User.IsInRole("admin"))
             {
             @Html.DisplayFor(modelItem => item.Email)
-            }*@
-            @{
-            if (Session["IsAdminFlag"] != null)
-            {
-                if ((bool)Session["IsAdminFlag"])
-                {
-                    @Html.DisplayFor(modelItem => item.Email)
-                }
             }
-            }
-        </td>
+         </td>
         <td class="table-paddings">
-            @*@if (HttpContext.Current.User.IsInRole("admin"))
+            @if (HttpContext.Current.User.IsInRole("admin"))
             {
                 @Html.DisplayFor(modelItem => item.Role)
-            }*@
-            @{
-            if (Session["IsAdminFlag"] != null)
-            {
-                if ((bool)Session["IsAdminFlag"])
-                {
-                     @Html.DisplayFor(modelItem => item.Role)
-                }
             }
-            }
-        </td>
+         </td>
         <td class="table-paddings">
             @Html.DisplayFor(modelItem => item.CreationDate)
         </td>       
         <td class="table-paddings">
-            @*@if (HttpContext.Current.User.IsInRole("admin"))
+            @if (HttpContext.Current.User.IsInRole("admin"))
             {
             <h3>@Html.ActionLink("Удалить пользователя", "Delete", "Account", new { userId =item.Id},null)</h3>
-            }*@
-            @{
-            if (Session["IsAdminFlag"] != null)
-            {
-                if ((bool)Session["IsAdminFlag"])
-                {
-                    @Html.ActionLink("Удалить пользователя", "Delete", "Account", new { userId = item.Id }, null)
-                }
             }
-            }
-        </td>
+         </td>
      </tr>
 }
 </table>
