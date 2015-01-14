@@ -6,21 +6,21 @@
     ViewBag.Title = "Edit";
 }
 
-<h2>Редактировать описание</h2>
+<h2 class="page-header-center">Редактировать описание</h2>
 @*---------------------------------------------------FORM FOR DESCRIPTION EDIT---------------------------------------------------*@
-<div width="100%" align="center">
-    <img style="max-width: 100%" src="@Url.Action("GetImage", "Photo", new {photoId = Session["PhotoId"]},null)" />
+<div class="block-align-center">
+    <img class="block-align-center" src="@Url.Action("GetImage", "Photo", new {photoId = Session["PhotoId"]},null)" />
 </div>
-<div width="100%" align="center">
+<div class="block-align-center">
     @using (Html.BeginForm("Edit", "Photo"))
     {
-    <div class="editor-field">
-        @Html.EditorFor(model => model.Description)
-        @Html.ValidationMessageFor(model => model.Description)
-    </div>
-    <div style="padding: 10px">
-        <input type="submit" value="Изменить описание" class="btn btn-default" />
-    </div>
+        <div class="block-align-center">
+            @Html.EditorFor(model => model.Description)
+            @Html.ValidationMessageFor(model => model.Description)
+        </div>
+        <div class="block-align-center">
+            <input type="submit" value="Изменить описание" class="btn btn-default" />
+        </div>
     }
 </div>
 @*---------------------------------------------------SCRIPT FOR VALIDATION HINT---------------------------------------------------*@

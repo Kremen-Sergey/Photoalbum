@@ -73,8 +73,10 @@ namespace PhotoalbumMvcPL.Controllers
             {
                 int albumid = (int)Session["AlbumId"];
                 try
-                {       
+                {
+                    if (!((image.ContentType == "image/jpeg") || (image.ContentType == "image/pjpeg") || (image.ContentType == "image/gif") || (image.ContentType == "image/png") || (image.ContentType == "image/svg+xml") || (image.ContentType == "image/tiff") || (image.ContentType == "image/vnd.microsoft.icon") || (image.ContentType == "image/vnd.wap.wbmp"))) { throw new Exception(); }
                     byte[] photo = new byte[image.ContentLength];
+
                     image.InputStream.Read(photo, 0, image.ContentLength);
                     photoService.Create(new PhotoeEntity()
                     {
@@ -89,7 +91,7 @@ namespace PhotoalbumMvcPL.Controllers
                 }
                 catch (Exception e)
                 {
-                    ViewBag.Error="Возможная причина ошибки: загружаемый файл не яваляется изображением или превышает размер 100 Мб";
+                    ViewBag.Error="Возможная причина ошибки: поддерживаются только файлы с расширением jpg, jpeg, png, tiff, gif, svg ";
                     if (Request.UrlReferrer != null)
                     {
                         return View("Error", (object) Request.UrlReferrer.Segments[2]);
@@ -322,6 +324,39 @@ namespace PhotoalbumMvcPL.Controllers
             }));
         }
 
+        #endregion
+
+        #region slider
+        [HttpGet]
+        public ActionResult Slider(int albumId)
+        {
+            AlbumEntity album = albumService.GetAll().FirstOrDefault(a => a.Id == albumId);
+            if (album == null) { return RedirectToAction("Me", "Profile"); }
+            Session["UserIdFromSession"] = null;
+            if (Session["Email"] != null)
+            {
+                var user = userService.GetAll().FirstOrDefault(u => u.Email.ToUpper() == Session["Email"].ToString().ToUpper());
+                if (user == null) { return RedirectToAction("Login", "Account"); }
+                Session["UserIdFromSession"] = user.Id;
+            }
+            Session["AlbumId"] = albumId;
+            Session["AlbumName"] = albumService.GetById(albumId).AlbumName;
+            Session["UserNameFromAlbum"] = userService.GetById(albumService.GetById(albumId).UserId).UserName;
+            Session["UserIdFromAlbum"] = userService.GetById(albumService.GetById(albumId).UserId).Id;
+            return
+                View(photoService.GetAll().
+                    Where(photo => photo.AlbumId == albumId) // IEnumerable<AlbumEntity> GetAll();
+                    .Select(photo => new PhotoViewModel()
+                    {
+                        Id = photo.Id,
+                        AlbumId = photo.AlbumId,
+                        Like = photo.Like,
+                        Description = photo.Description,
+                        ImagePhotoe = photo.ImagePhotoe,
+                        ImagePhotoMimeType = photo.ImagePhotoMimeType,
+                        AddTime = photo.AddTime
+                    }));
+        }
         #endregion
 
     }

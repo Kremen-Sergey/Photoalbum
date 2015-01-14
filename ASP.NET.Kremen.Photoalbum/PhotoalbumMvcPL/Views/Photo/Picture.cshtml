@@ -6,22 +6,19 @@
     ViewBag.Title = "Photoes";
 }
 
-<h2>Альбом @Html.ActionLink(Session["AlbumName"].ToString(), "Album", "Photo", new { albumId = (int)Session["AlbumId"] }, null) пользователя @Html.ActionLink(Session["UserNameFromAlbum"].ToString(), "Albums", "Profile", new { userId = (int)Session["UserIdFromAlbum"] }, null) </h2>
-<table align="right" width=device-width>
+<h2 class="page-header-center">Альбом @Html.ActionLink(Session["AlbumName"].ToString(), "Album", "Photo", new { albumId = (int)Session["AlbumId"] }, null) пользователя @Html.ActionLink(Session["UserNameFromAlbum"].ToString(), "Albums", "Profile", new { userId = (int)Session["UserIdFromAlbum"] }, null) </h2>
+<table>
     <tr>
-        <td width="80%" align="center" valign="top">
+        <td class="w-80-align-c-valign-top">
             @*---------------------------------------------------PHOTO---------------------------------------------------*@
-            <div style="float: none; padding-top:  80px; padding-bottom: 80px; background-color: darkgray;">
-                <img style="max-width: 100%" src="@Url.Action("GetImage", "Photo", new {photoId = Session["PhotoId"]},null)" />
+            <div class="photo-picture">
+                <img class="max-width-100" src="@Url.Action("GetImage", "Photo", new {photoId = Session["PhotoId"]},null)" />
             </div>
             @*---------------------------------------------------SHARE BUTTONS---------------------------------------------------*@
             <script type="text/javascript" src="//yastatic.net/share/share.js" charset="utf-8"></script>
             <div class="yashare-auto-init" data-yasharel10n="ru" data-yasharetype="link" data-yasharequickservices="vkontakte,facebook,twitter,lj,gplus"></div>
-            
-            
-
             @*---------------------------------------------------DESCRIPTION---------------------------------------------------*@
-            <div align="center" style="padding: 10px">
+            <div class="description-picture">
                 @Session["Description"].ToString()
             </div>
             @*---------------------------------------------------DELETE LINK---------------------------------------------------*@
@@ -30,46 +27,46 @@
                 {
                     if (Session["UserIdFromAlbum"] != null)
                     {
-                        if ((int) Session["UserIdFromSession"] == (int) Session["UserIdFromAlbum"])
+                        if ((int)Session["UserIdFromSession"] == (int)Session["UserIdFromAlbum"])
                         {
-                            <h3>@Html.ActionLink("Удалить", "Delete", "Photo", new {photoId = (int) Session["PhotoId"]}, null)</h3>
-                            <h3>@Html.ActionLink("Редактировать описание", "Edit", "Photo", new { photoId = (int)Session["PhotoId"] }, null)</h3>                                                                        
+                            <h3>@Html.ActionLink("Удалить", "Delete", "Photo", new { photoId = (int)Session["PhotoId"] }, null)</h3>
+                            <h3>@Html.ActionLink("Редактировать описание", "Edit", "Photo", new { photoId = (int)Session["PhotoId"] }, null)</h3>
                         }
                     }
                 }
-}         
+            }
             @*---------------------------------------------------VIEW PICTURE LINK---------------------------------------------------*@
-            <h3>@Html.ActionLink("Фото", "ViewPicture", "Photo", new { photoId = (int)Session["PhotoId"] }, null)</h3>       
+            <h3>@Html.ActionLink("Фото", "ViewPicture", "Photo", new { photoId = (int)Session["PhotoId"] }, null)</h3>
             @*---------------------------------------------------ADD COMMENT FORM---------------------------------------------------*@
             @if (HttpContext.Current.User.Identity.IsAuthenticated)
             {
                 using (Html.BeginForm("Picture", "Photo"))
-                 {
-                     <div class="editor-field">
-                         Добавить комментарий
-                         <input type="text" name="comment" />
-                     </div>
-                     <div style="padding: 20px">
-                        <input type="submit" value="Добавить" class="btn btn-default" />
-                     </div>
-                 }
+                {
+                    <div class="editor-field">
+                        Добавить комментарий
+                        <input type="text" name="comment" />
+                    </div>
+                <div class="description-picture">
+                    <input type="submit" value="Добавить" class="btn btn-default" />
+                </div>
+                }
             }
             @*---------------------------------------------------COMMENTS--------------------------------------------------*@
-            <table width="80%">
+            <table class="table-td-picture">
                 @foreach (CommentViewModel item in ViewBag.CommentList)
                 {
-                    <tr valign="bottom">
-                        <td width="80">
+                    <tr>
+                        <td >
                             @if (item.UserPhotoe != null)
                             {
-                                <img width="75" height="75" src="@Url.Action("GetImage", "Account", new {userId = item.UserId})" />
+                                <img class="avatar" src="@Url.Action("GetImage", "Account", new {userId = item.UserId})" />
                             }
                             else
                             {
-                                <img width="75" height="75" src="~/image/deletedAvatar.jpg">
+                                <img class="avatar" src="~/image/deletedAvatar.jpg">
                             }
                         </td>
-                        <td valign="top">
+                        <td class="username-in-comment">
                             <b>
                                 @if (item.UserName == "DELETED")
                                 {
@@ -81,10 +78,10 @@
                                 }
                             </b>
                         </td>
-                        <td valign="top">
+                        <td class="valign-top">
                             @item.TextComment
                         </td>
-                        <td width="30" align="right" valign="top">
+                        <td class="comment-date">
                             @item.CreateTime
                         </td>
                     </tr>
@@ -93,11 +90,11 @@
             </table>
         </td>
         @*---------------------------------------------------PHOTO PREVIEW---------------------------------------------------*@
-        <td align="right" valign="top">
-            <table align="center" valign="top">
+        <td class="valign-top">
+            <table class="valign-top">
                 <tr>
-                    <td valign="top">
-                        <table class="photo-table-preview" valign="top">
+                    <td class="valign-top">
+                        <table class="photo-table-preview">
                             @{
                                 int i = 0;
                                 foreach (var item in Model)
@@ -106,13 +103,11 @@
                                     {
                                         if (item.ImagePhotoe != null)
                                         {
-                                            <tr align="center">
-                                                <td align="center">
-                                                    <div>
-                                                        <a href=@Url.Action("Picture","Photo", new{photoId=item.Id},null)>
-                                                            <img class="photo-preview" src="@Url.Action("GetImage", "Photo", new {photoId = item.Id})" />
-                                                        </a>
-                                                    </div>
+                                            <tr>
+                                                <td>
+                                                   <a href=@Url.Action("Picture","Photo", new{photoId=item.Id},null)>
+                                                       <img class="photo-preview" src="@Url.Action("GetImage", "Photo", new {photoId = item.Id})" />
+                                                   </a>
                                                 </td>
                                             </tr>
                                         }
@@ -122,8 +117,8 @@
                             }
                         </table>
                     </td>
-                    <td valign="top">
-                        <table class="photo-table-preview" valign="top">
+                    <td class="valign-top">
+                        <table class="photo-table-preview">
                             @{
                                 int j = 0;
                                 foreach (var item in Model)
@@ -134,11 +129,9 @@
                                         {
                                             <tr>
                                                 <td>
-                                                    <div>
-                                                        <a href=@Url.Action("Picture","Photo", new{photoId=item.Id},null)>
-                                                            <img class="photo-preview" src="@Url.Action("GetImage", "Photo", new {photoId = item.Id})" />
-                                                        </a>
-                                                    </div>
+                                                   <a href=@Url.Action("Picture","Photo", new{photoId=item.Id},null)>
+                                                       <img class="photo-preview" src="@Url.Action("GetImage", "Photo", new {photoId = item.Id})" />
+                                                    </a>
                                                 </td>
                                             </tr>
                                         }
@@ -148,8 +141,8 @@
                             }
                         </table>
                     </td>
-                    <td valign="top">
-                        <table class="photo-table-preview" valign="top">
+                    <td class="valign-top">
+                        <table class="photo-table-preview">
                             @{
                                 int k = 0;
                                 foreach (var item in Model)
@@ -160,11 +153,9 @@
                                         {
                                             <tr>
                                                 <td>
-                                                    <div>
-                                                        <a href=@Url.Action("Picture","Photo", new{photoId=item.Id},null)>
-                                                            <img class="photo-preview" src="@Url.Action("GetImage", "Photo", new {photoId = item.Id})" />
-                                                        </a>
-                                                    </div>
+                                                    <a href=@Url.Action("Picture","Photo", new{photoId=item.Id},null)>
+                                                        <img class="photo-preview" src="@Url.Action("GetImage", "Photo", new {photoId = item.Id})" />
+                                                    </a>
                                                 </td>
                                             </tr>
                                         }
@@ -174,8 +165,8 @@
                             }
                         </table>
                     </td>
-                    <td valign="top">
-                        <table class="photo-table-preview" valign="top">
+                    <td class="valign-top">
+                        <table class="photo-table-preview">
                             @{
                                 int l = 0;
                                 foreach (var item in Model)
@@ -186,11 +177,9 @@
                                         {
                                             <tr>
                                                 <td>
-                                                    <div>
-                                                        <a href=@Url.Action("Picture","Photo", new{photoId=item.Id},null)>
-                                                            <img class="photo-preview" src="@Url.Action("GetImage", "Photo", new {photoId = item.Id})" />
-                                                        </a>
-                                                    </div>
+                                                    <a href=@Url.Action("Picture","Photo", new{photoId=item.Id},null)>
+                                                        <img class="photo-preview" src="@Url.Action("GetImage", "Photo", new {photoId = item.Id})" />
+                                                    </a>
                                                 </td>
                                             </tr>
                                         }

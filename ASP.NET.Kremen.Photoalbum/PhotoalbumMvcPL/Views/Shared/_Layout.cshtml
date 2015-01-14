@@ -13,8 +13,7 @@
     <link rel='stylesheet' href='/Content/bootstrap.min.css' type='text/css' media='all'>
     <link rel='stylesheet' href='/Content/bootstrap.css' type='text/css' media='all'>
 </head>
-    <body>
-        
+    <body> 
         @Html.Action("Menu", "Account")
         @Html.Partial("SearchField")
         @*@Html.Action("Search", "Photo")*@
@@ -22,13 +21,11 @@
             @RenderBody()
         </div>
         <hr />
-
-            @*<footer>
-                <p>©@DateTime.Now.Year - Kremen Sergey Photoalbum</p>
-            </footer>*@
-
-            @Scripts.Render("~/bundles/jquery")
-            @Scripts.Render("~/bundles/bootstrap")
-            @RenderSection("scripts", required: false)
+        @*<footer>
+             <p>©@DateTime.Now.Year - Kremen Sergey Photoalbum</p>
+        </footer>*@
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
 </body>
 </html>

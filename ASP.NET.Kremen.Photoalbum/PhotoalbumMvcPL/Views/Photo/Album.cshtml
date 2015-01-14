@@ -1,4 +1,5 @@
-﻿@using PhotoalbumMvcPL.ViewModels
+﻿@using System.Activities.Statements
+@using PhotoalbumMvcPL.ViewModels
 
 @model IEnumerable<PhotoViewModel>
 
@@ -6,7 +7,9 @@
     ViewBag.Title = "Photoes";
 }
 
-<h2>Альбом @Session["AlbumName"] пользователя @Html.ActionLink(Session["UserNameFromAlbum"].ToString(), "Albums", "Profile", new { userId = (int)Session["UserIdFromAlbum"] }, null) </h2>
+<h2 class="page-header-center">Альбом @Session["AlbumName"] пользователя @Html.ActionLink(Session["UserNameFromAlbum"].ToString(), "Albums", "Profile", new { userId = (int)Session["UserIdFromAlbum"] }, null) | @Html.ActionLink("Слайдер", "Slider", "Photo", new { albumId = (int)Session["AlbumId"] }, null)</h2>
+@*---------------------------------------------------IF USER HAVE NO RHOTO IN ALBUM---------------------------------------------------*@
+@if (Model.Count() == 0) {<div class="block-align-center"><b>В альбоме пока нет фотографий</b></div>}
 @*---------------------------------------------------ADD PHOTO FORM---------------------------------------------------*@
 @{
     if (Session["Email"] != null)
@@ -16,7 +19,7 @@
             if ((int)Session["UserIdFromSession"] == (int)Session["UserIdFromAlbum"])
             {
                 using (Html.BeginForm("Album", "Photo", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                {<div style="padding-bottom: 10px">
+                {<div class="form">
                     <div class="form-group">
                         <label>Добавить новую фотографию</label>
                         <input type="file" name="Image" />

@@ -119,8 +119,10 @@ namespace PhotoalbumMvcPL.Controllers
             {
                 try
                 {
+
                     if (image != null)
                     {
+                        if (!((image.ContentType == "image/jpeg") || (image.ContentType == "image/pjpeg") || (image.ContentType == "image/gif") || (image.ContentType == "image/png") || (image.ContentType == "image/svg+xml") || (image.ContentType == "image/tiff") || (image.ContentType == "image/vnd.microsoft.icon") || (image.ContentType == "image/vnd.wap.wbmp"))) { throw new Exception(); }
                         viewModel.UserPhotoMimeType = image.ContentType;
                         viewModel.UserPhotoe = new byte[image.ContentLength];
                         image.InputStream.Read(viewModel.UserPhotoe, 0, image.ContentLength);
@@ -135,8 +137,7 @@ namespace PhotoalbumMvcPL.Controllers
                 }
                 catch (Exception e)
                 {
-                    ViewBag.Error =
-                        "Возможная причина ошибки: загружаемый файл не яваляется изображением или превышает размер 100 Мб";
+                    ViewBag.Error = "Возможная причина ошибки: поддерживаются только файлы с расширением jpg, jpeg, png, tiff, gif, svg ";
                     return View("Error", (object) Request.UrlReferrer.Segments[2]);
                 }
                 Session["Email"] = viewModel.Email;
