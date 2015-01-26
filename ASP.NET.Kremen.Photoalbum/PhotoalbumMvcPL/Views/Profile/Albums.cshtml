@@ -1,19 +1,18 @@
-﻿@model IEnumerable<PhotoalbumMvcPL.ViewModels.AlbumViewModel>
+﻿@model PhotoalbumMvcPL.ViewModels.AlbumsViewModel
 
 @{
     ViewBag.Title = "Albums";
 }
-
 @*---------------------------------------------------HEADER---------------------------------------------------*@
 @{
 @*---------------------------------------------------HEADER IF USER HAVE NO ALBUMS---------------------------------------------------*@
-    if (Model.Count() == 0)
+    if (Model.AlbumList.Count() == 0)
     {
-        if (Session["Email"] != null)
+        if (HttpContext.Current.User.Identity.IsAuthenticated)
         {
-            if (Session["UserIdFromAlbums"] != null)
+            if (Model.UserFromAlbum != null)
             {
-                if ((int)Session["UserIdFromSession"] == (int)Session["UserIdFromAlbums"])
+                if (Model.UserFromSession.Id == Model.UserFromAlbum.Id)
                 {
                     <b>У Вас пока нет альбомов</b>
                 }
@@ -32,42 +31,36 @@
     @*---------------------------------------------------HEADER IF USER HAVE ALBUMS---------------------------------------------------*@
     else
     {
-        if (Session["Email"] != null)
+        if (HttpContext.Current.User.Identity.IsAuthenticated)
         {
-            if (Session["UserIdFromAlbums"] != null)
+            if (Model.UserFromAlbum != null)
             {
-                if ((int) Session["UserIdFromSession"] == (int) Session["UserIdFromAlbums"])
+                if (Model.UserFromSession.Id == Model.UserFromAlbum.Id)
                 {
                     <h2>Мои альбомы</h2>
                 }
                 else
                 {
-                    <h2>Альбомы пользователя @Session["UserNameFromUserId"].ToString()</h2>
+                    <h2>Альбомы пользователя @Model.UserFromAlbum.UserName</h2>
                 }
 
             }
         }
         else
         {
-            <h2>Альбомы пользователя @Session["UserNameFromUserId"].ToString()</h2>
+            <h2>Альбомы пользователя @Model.UserFromAlbum.UserName</h2>
         }
     }
 }
 @*---------------------------------------------------CREATE ALBUM LINK---------------------------------------------------*@
 @{
-    if (Session["Email"] != null)
+    if (HttpContext.Current.User.Identity.IsAuthenticated)
     {
-        if (Session["UserIdFromAlbums"] != null)
+        if (Model.UserFromAlbum != null)
         {
-            if ((int)Session["UserIdFromSession"] == (int)Session["UserIdFromAlbums"])
+            if (Model.UserFromSession.Id == Model.UserFromAlbum.Id)
             {
-                <table>
-                    <tr>
-                        <td>
-                            @Html.ActionLink("Создать новый альбом", "New", "Profile")
-                        </td>
-                    </tr>
-                </table>
+               <div>@Html.ActionLink("Создать новый альбом", "New", "Profile")</div>
             }
         }
     }
@@ -76,20 +69,17 @@
 <table style="border-spacing: 50px 50px">
     @*---------------------------------------------------HEADER FOR ALBUM TABLE---------------------------------------------------*@
     @{
-        if (Model.Count() != 0)
+        if (Model.AlbumList.Count() != 0)
         {
             <tr>
                 <th class="table-paddings">
-                    @Html.DisplayNameFor(model => model.AlbumName)
+                    @Html.DisplayNameFor(model => model.AlbumList.First().AlbumName)
                 </th>
                 <th class="table-paddings">
-                    @Html.DisplayNameFor(model => model.Description)
+                    @Html.DisplayNameFor(model => model.AlbumList.First().Description)
                 </th>
                 <th class="table-paddings">
-                    @Html.DisplayNameFor(model => model.CreationTime)
-                </th>
-                <th class="table-paddings">
-                    @Html.DisplayNameFor(model => model.UserName)
+                    @Html.DisplayNameFor(model => model.AlbumList.First().CreationTime)
                 </th>
                 <th class="table-paddings"></th>
             </tr>
@@ -97,7 +87,7 @@
     }
     @*---------------------------------------------------ALBUM LIST FOR ALBUM TABLE---------------------------------------------------*@
     @{
-        foreach (var item in Model)
+        foreach (var item in Model.AlbumList)
         {
             <tr>
                 <td class="table-paddings">
@@ -110,23 +100,14 @@
                     @Html.DisplayFor(modelItem => item.CreationTime)
                 </td>
                 <td class="table-paddings">
-                    @Html.DisplayFor(modelItem => item.UserName)
-                </td>
-                <td class="table-paddings">
                     @*---------------------------------------------------DELETE ALBUM LINK---------------------------------------------------*@
-                    @if (Session["Email"] != null)
+                    @if (HttpContext.Current.User.Identity.IsAuthenticated)
                     {
-                        if (Session["UserIdFromAlbums"] != null)
+                        if (Model.UserFromAlbum != null)
                         {
-                            if ((int)Session["UserIdFromSession"] == (int)Session["UserIdFromAlbums"])
+                            if (Model.UserFromSession.Id == Model.UserFromAlbum.Id)
                             {
-                                <table>
-                                    <tr>
-                                        <td>
-                                            @Html.ActionLink("Удалить альбом", "Delete", "Profile", new { albumId = item.Id }, null)
-                                        </td>
-                                    </tr>
-                                </table>
+                                <div>@Html.ActionLink("Удалить альбом", "Delete", "Profile", new { albumId = item.Id }, null)</div>
                             }
                         }
                     }

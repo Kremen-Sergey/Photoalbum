@@ -29,6 +29,12 @@ namespace PhotoalbumMvcPL.ViewModels
         [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "Пароли должны совпадать.")]
         public string ConfirmPassword { get; set; }
 
+
+        [ScaffoldColumn(false)]
+        public int CaptchaValue { get; set; }
+
+
+
         [Required]
         public string Captcha { get; set; }
 

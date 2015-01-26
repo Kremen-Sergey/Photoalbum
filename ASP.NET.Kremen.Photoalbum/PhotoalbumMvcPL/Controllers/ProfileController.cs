@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using BLL.Interfaces.Entities;
 using BLL.Interfaces.Services;
+using PhotoalbumMvcPL.Infrastructure;
 using PhotoalbumMvcPL.ViewModels;
 
 namespace PhotoalbumMvcPL.Controllers
@@ -27,39 +28,41 @@ namespace PhotoalbumMvcPL.Controllers
 
         #region albums
         [HttpGet]
-        public ActionResult Albums(int userId)
+        public ActionResult Albums(SessionWrapper sessionWrapper, int userId)
         {
-            UserEntity userEntity = userService.GetAll().FirstOrDefault(u => u.Id == userId);
-            if (userEntity == null) { return RedirectToAction("Me", "Profile"); }
-            Session["UserIdFromSession"] = null;
-            if (Session["Email"] != null)
+
+            UserEntity userFromAlbum = userService.GetAll().FirstOrDefault(u => u.Id == userId);
+            if (userFromAlbum == null) { return RedirectToAction("Me", "Profile"); }
+            UserEntity userFromSession = null;
+            if (sessionWrapper.Email != null)
             {
-                var user =userService.GetAll().FirstOrDefault(u => u.Email.ToUpper() == Session["Email"].ToString().ToUpper());
-                if (user == null) { return RedirectToAction("Login", "Account");}
-                Session["UserIdFromSession"] = user.Id;    
+                userFromSession =userService.GetAll().FirstOrDefault(u => u.Email.ToUpper() == sessionWrapper.Email.ToUpper());
+                if (userFromSession == null) { return RedirectToAction("Login", "Account");}    
             }
-            Session["UserNameFromUserId"] = userService.GetById(userId).UserName;
-            Session["UserIdFromAlbums"] = userId;
-                return
-                    View(albumService.GetAll()
-                        .Where(album => album.UserId == userId) // IEnumerable<AlbumEntity> GetAll();
-                        .Select(album => new AlbumViewModel()
-                        {
-                            Id = album.Id,
-                            AlbumName = album.AlbumName,
-                            Description = album.Description,
-                            UserId = album.UserId,
-                            UserName = userService.GetById(album.UserId).UserName,
-                            CreationTime = album.CreationTime
-                        }));
+            AlbumsViewModel model=new AlbumsViewModel();
+            model.UserFromSession = userFromSession;
+            model.UserFromAlbum = userFromAlbum;
+            model.AlbumList = albumService.GetAll()
+                .Where(album => album.UserId == userId)
+                .Select(album => new HelperAlbumViewModel()
+                {
+                    Id = album.Id,
+                    AlbumName = album.AlbumName,
+                    Description = album.Description,
+                    UserId = album.UserId,
+                    UserName = userService.GetById(album.UserId).UserName,
+                    CreationTime = album.CreationTime
+                });
+
+            return View(model);
         }
         #endregion
 
         #region new
         [HttpGet]
-        public ActionResult New()
+        public ActionResult New(SessionWrapper sessionWrapper)
         {
-            if (Session["Email"] != null)
+            if (sessionWrapper.Email != null)
             {
                 return View();
             }
@@ -67,64 +70,59 @@ namespace PhotoalbumMvcPL.Controllers
         }
 
         [HttpPost]
-        public ActionResult New(AlbumViewModel viewModel)
+        public ActionResult New(SessionWrapper sessionWrapper, HelperAlbumViewModel viewModel)
         {
-            Session["UserIdFromSession"] = null;
-            if (Session["Email"] != null)
+            if (sessionWrapper.Email!=null)
             {
-            var email = Session["Email"].ToString();
-            var user = userService.GetAll().FirstOrDefault(u => u.Email.ToUpper() == email.ToUpper());
-            if (user == null) { return RedirectToAction("Login", "Account"); }
-            Session["UserIdFromSession"] = user.Id;    
+            var email = sessionWrapper.Email;
+            var userFromSession = userService.GetAll().FirstOrDefault(u => u.Email.ToUpper() == email.ToUpper());
+            if (userFromSession == null) { return RedirectToAction("Login", "Account"); }
                 if (ModelState.IsValid)
                 {           
                     albumService.Create(new AlbumEntity()
                     {
                         AlbumName=viewModel.AlbumName,
                         Description=viewModel.Description,
-                        UserId = (int)Session["UserIdFromSession"],
+                        UserId =userFromSession.Id,
                         CreationTime = DateTime.Now
                      });                  
                 }
-                return RedirectToAction("Albums", "Profile", new { userId = (int)Session["UserIdFromSession"] });
+                return RedirectToAction("Albums", "Profile", new { userId = viewModel.UserId });
             }
             return RedirectToAction("Login", "Account");
         }
         #endregion
 
         #region delete
-        public ActionResult Delete(int albumId)
+        public ActionResult Delete(SessionWrapper sessionWrapper, int albumId)
         {
             AlbumEntity albumEntity = albumService.GetAll().FirstOrDefault(a => a.Id == albumId);
             if (albumEntity == null) { return RedirectToAction("Me", "Profile"); }
-            Session["UserIdFromSession"] = null;
-            if (Session["Email"] != null)
+            if (sessionWrapper.Email!= null)
             {
-                var email = Session["Email"].ToString();
-                var user = userService.GetAll().FirstOrDefault(u => u.Email.ToUpper() == email.ToUpper());
-                if (user == null) { return RedirectToAction("Login", "Account"); }
-                Session["UserIdFromSession"] = user.Id;
+                var email = sessionWrapper.Email;
+                var userFromSession = userService.GetAll().FirstOrDefault(u => u.Email.ToUpper() == email.ToUpper());
+                if (userFromSession == null) { return RedirectToAction("Login", "Account"); }
                 var album = albumService.GetAll().FirstOrDefault(u => u.Id == albumId);
                 if (album != null)
                 {
-                    if ((int)Session["UserIdFromSession"] == album.UserId)
+                    if (userFromSession.Id == album.UserId)
                     {
                         albumService.Delete(album);
                     }
                 }
-                return RedirectToAction("Albums", "Profile", new { userId = (int)Session["UserIdFromSession"] });
+                return RedirectToAction("Albums", "Profile", new { userId = userFromSession.Id });
             }
             return RedirectToAction("Login", "Account");
         }
         #endregion
 
         #region me
-        public ActionResult Me()
+        public ActionResult Me(SessionWrapper sessionWrapper)
         {
-
-            if (Session["Email"] != null)
+            if (sessionWrapper.Email!=null)
             {
-                var email = Session["Email"].ToString();           
+                var email = sessionWrapper.Email;           
                 var user = userService.GetAll().FirstOrDefault(u => u.Email.ToUpper() == email.ToUpper());
                 if (user != null)
                 {

@@ -1,11 +1,13 @@
 ﻿@using PhotoalbumMvcPL.ViewModels
 
-@model IEnumerable<PhotoViewModel>
+@model IEnumerable<HelperPhotoViewModel>
 
 @{
     ViewBag.Title = "Photo";
 }
-<h2>Альбом @Html.ActionLink(Session["AlbumName"].ToString(), "Album", "Photo", new { albumId = (int)Session["AlbumId"] }, null) пользователя @Html.ActionLink(Session["UserNameFromAlbum"].ToString(), "Albums", "Profile", new { userId = (int)Session["UserIdFromAlbum"] }, null) </h2>
+
+<h2>Альбом @Html.ActionLink((string)ViewBag.AlbumName, "Album", "Photo", new { albumId = (int)ViewBag.AlbumId }, null) пользователя
+     @Html.ActionLink((string)ViewBag.UserNameFromAlbum, "Albums", "Profile", new { userId = (int)ViewBag.UserIdFromAlbum }, null) </h2>
 @{
     if (Model.Count() != 0)
     {

@@ -2,6 +2,8 @@
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using PhotoalbumMvcPL.Binders;
+using PhotoalbumMvcPL.Infrastructure;
 
 namespace PhotoalbumMvcPL
 {
@@ -17,6 +19,7 @@ namespace PhotoalbumMvcPL
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            ModelBinders.Binders.Add(typeof(SessionWrapper), new SessionWrapperBinder());
         }
 
     }

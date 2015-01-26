@@ -1,42 +1,47 @@
 ﻿@using PhotoalbumMvcPL.ViewModels
 
-@model IEnumerable<PhotoViewModel>
+@model PhotoViewModel
 
 @{
     ViewBag.Title = "Photoes";
 }
 
-<h2 class="page-header-center">Альбом @Html.ActionLink(Session["AlbumName"].ToString(), "Album", "Photo", new { albumId = (int)Session["AlbumId"] }, null) пользователя @Html.ActionLink(Session["UserNameFromAlbum"].ToString(), "Albums", "Profile", new { userId = (int)Session["UserIdFromAlbum"] }, null) </h2>
+@*@{
+    ViewBag.UserIdFromSession = Model.UserFromSession.Id;
+    ViewBag.PhotoId = Model.Photo.Id;
+}*@
+<h2 class="page-header-center">Альбом @Html.ActionLink(Model.Album.AlbumName, "Album", "Photo", new { albumId = Model.Album.Id }, null) пользователя
+     @Html.ActionLink(Model.UserFromAlbum.UserName, "Albums", "Profile", new { userId = Model.Album.UserId }, null) </h2>
 <table>
     <tr>
         <td class="w-80-align-c-valign-top">
             @*---------------------------------------------------PHOTO---------------------------------------------------*@
             <div class="photo-picture">
-                <img class="max-width-100" src="@Url.Action("GetImage", "Photo", new {photoId = Session["PhotoId"]},null)" />
+                <img class="max-width-100" src="@Url.Action("GetImage", "Photo", new {photoId = Model.Photo.Id},null)" />
             </div>
             @*---------------------------------------------------SHARE BUTTONS---------------------------------------------------*@
             <script type="text/javascript" src="//yastatic.net/share/share.js" charset="utf-8"></script>
             <div class="yashare-auto-init" data-yasharel10n="ru" data-yasharetype="link" data-yasharequickservices="vkontakte,facebook,twitter,lj,gplus"></div>
             @*---------------------------------------------------DESCRIPTION---------------------------------------------------*@
             <div class="description-picture">
-                @Session["Description"].ToString()
+                @Model.Photo.Description
             </div>
             @*---------------------------------------------------DELETE LINK---------------------------------------------------*@
             @{
-                if (Session["Email"] != null)
+                if (HttpContext.Current.User.Identity.IsAuthenticated)
                 {
-                    if (Session["UserIdFromAlbum"] != null)
+                    if (Model.UserFromAlbum != null)
                     {
-                        if ((int)Session["UserIdFromSession"] == (int)Session["UserIdFromAlbum"])
+                        if (Model.UserFromSession.Id == Model.UserFromAlbum.Id)
                         {
-                            <h3>@Html.ActionLink("Удалить", "Delete", "Photo", new { photoId = (int)Session["PhotoId"] }, null)</h3>
-                            <h3>@Html.ActionLink("Редактировать описание", "Edit", "Photo", new { photoId = (int)Session["PhotoId"] }, null)</h3>
+                            <h3>@Html.ActionLink("Удалить", "Delete", "Photo", new { photoId = Model.Photo.Id }, null)</h3>
+                            <h3>@Html.ActionLink("Редактировать описание", "Edit", "Photo", new { photoId =Model.Photo.Id }, null)</h3>
                         }
                     }
                 }
             }
             @*---------------------------------------------------VIEW PICTURE LINK---------------------------------------------------*@
-            <h3>@Html.ActionLink("Фото", "ViewPicture", "Photo", new { photoId = (int)Session["PhotoId"] }, null)</h3>
+            <h3>@Html.ActionLink("Фото", "ViewPicture", "Photo", new { photoId =Model.Photo.Id}, null)</h3>
             @*---------------------------------------------------ADD COMMENT FORM---------------------------------------------------*@
             @if (HttpContext.Current.User.Identity.IsAuthenticated)
             {
@@ -44,6 +49,7 @@
                 {
                     <div class="editor-field">
                         Добавить комментарий
+                        <input type="text" name="photoId" hidden value=@Model.Photo.Id.ToString() />
                         <input type="text" name="comment" />
                     </div>
                 <div class="description-picture">
@@ -53,7 +59,7 @@
             }
             @*---------------------------------------------------COMMENTS--------------------------------------------------*@
             <table class="table-td-picture">
-                @foreach (CommentViewModel item in ViewBag.CommentList)
+                @foreach (CommentViewModel item in Model.CommentList)
                 {
                     <tr>
                         <td >
@@ -97,7 +103,7 @@
                         <table class="photo-table-preview">
                             @{
                                 int i = 0;
-                                foreach (var item in Model)
+                                foreach (var item in Model.PhotoList)
                                 {
                                     if (i % 4 == 0)
                                     {
@@ -121,7 +127,7 @@
                         <table class="photo-table-preview">
                             @{
                                 int j = 0;
-                                foreach (var item in Model)
+                                foreach (var item in Model.PhotoList)
                                 {
                                     if (j % 4 == 1)
                                     {
@@ -145,7 +151,7 @@
                         <table class="photo-table-preview">
                             @{
                                 int k = 0;
-                                foreach (var item in Model)
+                                foreach (var item in Model.PhotoList)
                                 {
                                     if (k % 4 == 2)
                                     {
@@ -169,7 +175,7 @@
                         <table class="photo-table-preview">
                             @{
                                 int l = 0;
-                                foreach (var item in Model)
+                                foreach (var item in Model.PhotoList)
                                 {
                                     if (l % 4 == 3)
                                     {

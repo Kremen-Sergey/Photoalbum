@@ -4,6 +4,7 @@
     <div style="padding: 20px">
         @if (HttpContext.Current.User.Identity.IsAuthenticated)
         {
+            
             <div style="color: white">
                 @HttpContext.Current.User.Identity.Name
                 @if (HttpContext.Current.User.IsInRole("admin"))

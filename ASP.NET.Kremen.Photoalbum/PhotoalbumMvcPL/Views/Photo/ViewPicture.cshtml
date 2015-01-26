@@ -1,22 +1,14 @@
-﻿@using PhotoalbumMvcPL.ViewModels
-
-@model PhotoViewModel
+﻿@model int
 
 @{
     ViewBag.Title = "Photoes";
 }
 
-<table>
-    <tr>
-        <td>
-            @*---------------------------------------------------LINK BACK TO PHOTO IN ALBUM---------------------------------------------------*@
-            <a href=@Url.Action("Picture","Photo", new{photoId=(int)Session["PhotoId"]},null)>Назад</a>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            @*---------------------------------------------------PHOTO---------------------------------------------------*@
-            <img src="@Url.Action("GetImage", "Photo", new {photoId = Session["PhotoId"]},null)" />
-        </td>
-    </tr>
-</table>
+<div>
+    @*---------------------------------------------------LINK BACK TO PHOTO IN ALBUM---------------------------------------------------*@
+    <a href=@Url.Action("Picture","Photo", new{photoId=Model},null)>Назад</a>
+</div>
+<div>
+    @*---------------------------------------------------PHOTO---------------------------------------------------*@
+    <img src="@Url.Action("GetImage", "Photo", new {photoId = Model},null)" />
+</div>

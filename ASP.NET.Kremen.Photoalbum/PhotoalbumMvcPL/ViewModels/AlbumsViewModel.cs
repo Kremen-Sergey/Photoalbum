@@ -3,12 +3,11 @@ using BLL.Interfaces.Entities;
 
 namespace PhotoalbumMvcPL.ViewModels
 {
-    public class AlbumViewModel
+    public class AlbumsViewModel
     {
         public UserEntity UserFromSession { get; set; }
         public UserEntity UserFromAlbum { get; set; }
-        public AlbumEntity Album { get; set; }
 
-        public IEnumerable<HelperPhotoViewModel> PhotoList { get; set; }
+        public IEnumerable<HelperAlbumViewModel> AlbumList { get; set; } 
     }
 }

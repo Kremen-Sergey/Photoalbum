@@ -58,7 +58,7 @@ namespace PhotoalbumMvcPL.Controllers
         }
 
         [HttpPost]
-        public ActionResult Login(LogOnViewModel viewModel, string returnUrl)
+        public ActionResult Login(SessionWrapper sessionWrapper, LogOnViewModel viewModel, string returnUrl)
         {
           
             if (ModelState.IsValid)
@@ -72,7 +72,7 @@ namespace PhotoalbumMvcPL.Controllers
                     }
                     else
                     {
-                            Session["Email"] = viewModel.Email;
+                        sessionWrapper.Email = viewModel.Email;
                             
                         return RedirectToAction("Me", "Profile");
                     }
@@ -102,9 +102,9 @@ namespace PhotoalbumMvcPL.Controllers
         }
 
         [HttpPost]
-        public ActionResult Register(RegisterViewModel viewModel, HttpPostedFileBase image)
+        public ActionResult Register(SessionWrapper sessionWrapper, RegisterViewModel viewModel, HttpPostedFileBase image)
         {
-            if (viewModel.Captcha != (string)Session[CaptchaImage.CaptchaValueKey])
+            if (viewModel.Captcha != (string)Session[CaptchaImage.CaptchaValueKey])/////////////////////
             {
                 ModelState.AddModelError("Captcha", "Текст с картинки введен неверно");
                 return View(viewModel);
@@ -140,7 +140,7 @@ namespace PhotoalbumMvcPL.Controllers
                     ViewBag.Error = "Возможная причина ошибки: поддерживаются только файлы с расширением jpg, jpeg, png, tiff, gif, svg ";
                     return View("Error", (object) Request.UrlReferrer.Segments[2]);
                 }
-                Session["Email"] = viewModel.Email;
+                sessionWrapper.Email = viewModel.Email;
                 MembershipUser membershipUser = ((CustomMembershipProvider)Membership.Provider).CreateUser(viewModel.UserName, viewModel.Password, viewModel.Email, viewModel.UserPhotoMimeType, viewModel.UserPhotoe);           
                 if (membershipUser != null)
                 {
