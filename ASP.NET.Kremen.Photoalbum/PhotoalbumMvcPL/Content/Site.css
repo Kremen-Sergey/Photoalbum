@@ -274,3 +274,29 @@ textarea {
                 border: #fff 1px solid;
             }
  
+            div.pager
+            {
+              text-align: right;
+              border-top: 2px solid silver;
+              padding: .5em 0 0 0;
+              margin-top: 1em;
+            }
+
+            div.pager A
+            {
+              font-size: 1.1em;
+              color: #666;
+              text-decoration: none;
+              padding: 0 .4em 0 .4em;
+            }
+
+            div.pager A:hover
+            {
+              background-color: Silver;
+            }
+
+            div.pager A.selected
+            {
+              background-color: #353535;
+              color: White;
+            }          

@@ -133,3 +133,6 @@ new { userId = Model.UserFromAlbum.Id }, null) | @Html.ActionLink("Слайде�
             </table>
         </td>
 </table>
+<div class="pager">
+    @Html.PageLinks(Model.PagingInfo, x => Url.Action("Album", "Photo", new { albumId=Model.Album.Id, page = x }))
+</div>

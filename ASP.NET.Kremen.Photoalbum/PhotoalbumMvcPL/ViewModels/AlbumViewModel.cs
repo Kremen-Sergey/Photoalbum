@@ -10,5 +10,9 @@ namespace PhotoalbumMvcPL.ViewModels
         public AlbumEntity Album { get; set; }
 
         public IEnumerable<HelperPhotoViewModel> PhotoList { get; set; }
+
+        public PagingInfo PagingInfo { get; set; }
+
+
     }
 }

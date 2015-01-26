@@ -21,6 +21,7 @@ namespace PhotoalbumMvcPL.Controllers
         private readonly IAlbumService albumService;
         private readonly IUserService userService;
         private readonly ICommentService commentService;
+        private readonly int PageSize = 4;
         #endregion
 
         #region constructor
@@ -36,8 +37,9 @@ namespace PhotoalbumMvcPL.Controllers
         #region Album
 
         [HttpGet]
-        public ActionResult Album(SessionWrapper sessionWrapper, int albumId)
+        public ActionResult Album(SessionWrapper sessionWrapper, int albumId, int page=1)
         {
+            
             var album = albumService.GetAll().FirstOrDefault(a => a.Id == albumId);
             UserEntity userFromSession = null;
             if (album == null) { return RedirectToAction("Me", "Profile"); }
@@ -53,6 +55,9 @@ namespace PhotoalbumMvcPL.Controllers
             model.Album = album;
             model.PhotoList=photoService.GetAll().
                     Where(photo => photo.AlbumId == albumId)
+                    .OrderBy(p => p.Id)
+                    .Skip((page - 1) * PageSize)
+                    .Take(PageSize)
                     .Select(photo => new HelperPhotoViewModel()
                     {  
                         Id =photo.Id,
@@ -63,6 +68,12 @@ namespace PhotoalbumMvcPL.Controllers
                         ImagePhotoMimeType=photo.ImagePhotoMimeType,
                         AddTime=photo.AddTime
                     });
+            model.PagingInfo = new PagingInfo
+            {
+                CurrentPage = page,
+                ItemsPerPage = PageSize,
+                TotalItems = photoService.GetAll().Where(photo => photo.AlbumId == albumId).Count()
+            };
             return
                 View(model);
         }
